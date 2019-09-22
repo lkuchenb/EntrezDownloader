@@ -19,6 +19,8 @@ results, failed  = edl.efetch(db = 'nuccore', ids = ids)
 
 This will generate a list of XML results returned by each batch invocation. Additionally, a list of IDs that were part of failed batches is returned.
 
+**Note that the result order does not necessarily match the original ID order or content. Unmatched IDs might simply be missing. The `failed` list contains only IDs for which the HTTP request against Entrez failed for technical reasons.**
+
 To get more interpretable results, you can pass a function to `efetch()` that processes the results right after they are fetched. E.g you might want to use the Biopython Entrez XML parser to parse the XML and turn it into individual records:
 
 ```python
