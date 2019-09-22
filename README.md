@@ -33,3 +33,15 @@ results, failed = edl.efetch(
 ```
 
 The function has to return a list. The default function is `lambda xml_text : [xml_text]`.
+
+The `EntrezDownloader` class can be tweaked in the following ways:
+
+```python
+edl = EntrezDownloader(
+   email = 'foo@bar.baz',                  # An email address. You might get blocked by the NCBI without specifying one.
+   api_key = 'abcdefghijklmnopqrstuvwxyz', # An API key. You can obtain one by creating an NCBI account. Speeds things up.
+   num_threads = 30,                       # The number of parallel requests to make
+   batch_size = 50,                        # The number of IDs to fetch per request
+   pbar = True                             # Enables a progress bar, requires tqdm package
+   )
+```
