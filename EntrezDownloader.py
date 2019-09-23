@@ -85,7 +85,7 @@ class EntrezDownloader:
         self.print_lock      = threading.Lock()
         self.pbar            = pbar
 
-    def _efetch_batch(self, db, ids, result_collector, result_func):
+    def _efetch_batch(self, db, ids, result_collector, result_func, **kwargs):
         post_data = {
             'tool'    : 'EntrezDownloader',
             'email'   : self.email,
@@ -94,6 +94,8 @@ class EntrezDownloader:
             'db'      : db,
             'retmode' : 'xml',
         }
+
+        post_data.update(kwargs)
 
         if self.email:
             post_data.update({'email':self.email})
@@ -119,7 +121,7 @@ class EntrezDownloader:
             with self.print_lock:
                 print(f'An error occurred.')
 
-    def efetch(self, db, ids, result_func = lambda x : [x]):
+    def efetch(self, db, ids, result_func = lambda x : [x], **kwargs):
         """Interface to the efetch database.
 
         result_func: A function to be applied to the response. Must return an iterable.
@@ -141,7 +143,8 @@ class EntrezDownloader:
                     db = db,
                     ids = ids[start:start+num],
                     result_collector = results,
-                    result_func = result_func)
+                    result_func = result_func,
+                    **kwargs)
             fs.append(f)
 
         futures.wait(fs)
