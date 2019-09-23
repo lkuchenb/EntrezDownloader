@@ -119,7 +119,7 @@ class EntrezDownloader:
         except Exception as e:
             result_collector.add_failed(ids)
             with self.print_lock:
-                print(f'An error occurred.')
+                print(f'An error occurred: {e}')
 
     def efetch(self, db, ids, result_func = lambda x : [x], **kwargs):
         """Interface to the efetch database.
