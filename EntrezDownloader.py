@@ -103,23 +103,25 @@ class EntrezDownloader:
         if self.api_key:
             post_data.update({'api_key':self.api_key})
 
-        try:
-            for _ in range(3): # Retry three times
+        error = None
+        for i in range(3): # Retry three times
+            print(f"ATTEMPT {i}")
+            try:
                 self.request_limiter.wait()
                 response = requests.post(f'{self.baseurl}/efetch.cgi', post_data)
                 if response.status_code == requests.codes.ok:
+                    results  = result_func(response.text)
+                    result_collector.add_results(results)
+                    error = None
                     break
-            if response.status_code != requests.codes.ok:
-                with self.print_lock:
-                    print(f'[STATUS {response.status_code}] An error occurred, you may see a response text here: {response.text}')
-                result_collector.add_failed(ids)
-            else:
-                results  = result_func(response.text)
-                result_collector.add_results(results)
-        except Exception as e:
+                else:
+                    error = f'[STATUS {response.status_code}] An error occurred, you may see a response text here: {response.text}'
+            except Exception as e:
+                error = f'[UNKNOWN ERROR] {e}'
+
+        if error:
             result_collector.add_failed(ids)
-            with self.print_lock:
-                print(f'An error occurred: {e}')
+            print(error)
 
     def efetch(self, db, ids, result_func = lambda x : [x], **kwargs):
         """Interface to the efetch database.
