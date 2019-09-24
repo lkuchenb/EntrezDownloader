@@ -105,7 +105,6 @@ class EntrezDownloader:
 
         error = None
         for i in range(3): # Retry three times
-            print(f"ATTEMPT {i}")
             try:
                 self.request_limiter.wait()
                 response = requests.post(f'{self.baseurl}/efetch.cgi', post_data)
