@@ -81,7 +81,7 @@ class EntrezDownloader:
         self.batch_size      = batch_size
         self.email           = email
         self.api_key         = api_key
-        self.request_limiter = RequestLimiter(min_wait=0.35 if not api_key else 0.1)
+        self.request_limiter = RequestLimiter(min_wait=0.35 if not api_key else 0.15)
         self.print_lock      = threading.Lock()
         self.pbar            = pbar
 
